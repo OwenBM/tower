@@ -1,6 +1,7 @@
 <script setup>
 import { AppState } from '@/AppState.js';
 import { towerEventService } from '@/services/TowerEventService.js';
+import { logger } from '@/utils/Logger.js';
 import { Pop } from '@/utils/Pop.js';
 import { computed, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
@@ -19,8 +20,21 @@ async function getTowerEventById(){
     }
 }
 
-onMounted(()=>{
-    getTowerEventById()
+async function cancelTowerEvent() {
+  try {
+    logger.log('button works')
+    const towerEventId = route.params.towerEventId
+    logger.log('button still works')
+    await towerEventService.cancelTowerEvent(towerEventId)
+  }
+  catch (error) {
+    Pop.error(error);
+  }
+
+}
+
+onMounted(() => {
+  getTowerEventById()
 })
 </script>
 
@@ -35,9 +49,15 @@ onMounted(()=>{
       </div>
       <div class="row justify-content-center">
         <div class="col-10">
-          <div class="d-flex align-items-center">
-            <h1>{{ towerEvent.name }}</h1>
-            <div class="btn btn-grey text-primary fw-bold ms-3">{{ towerEvent.type }}</div>
+          <div class="d-flex justify-content-between">
+            <div class="d-flex align-items-center">
+              <h1>{{ towerEvent.name }}</h1>
+              <div class="btn btn-grey text-primary fw-bold ms-3">{{ towerEvent.type }}</div>
+            </div>
+            <div class="">
+              <button @click="cancelTowerEvent()" class="btn btn-danger"> CANCEL EVENT </button>
+              <div v-if="AppState.TowerEventPage.isCanceled == true"> event canceled!</div>
+            </div>
           </div>
           <div>{{ towerEvent.description }}</div>
           <div>

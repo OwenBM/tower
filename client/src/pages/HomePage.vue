@@ -54,6 +54,7 @@ async function getAllTowerEvents() {
 onMounted(()=> {
     getAllTowerEvents()
 
+
 })
 
 
@@ -110,7 +111,8 @@ onMounted(()=> {
           <div v-for="filterType in filterTypes" :key="filterType.type" class="col-md-2">
             <div @click="selectedType = filterType.type" class="text-center lightest-blue-ever rounded p-2">
               <h3 :class="filterType.symbolClassing"></h3>
-              <div>{{ filterType.type }}</div>
+
+              <div>{{ filterType.type.toLocaleUpperCase() }}</div>
             </div>
           </div>
         </div>
@@ -144,6 +146,7 @@ onMounted(()=> {
 
 .lightest-blue-ever {
   background-color: #f8f6ff;
+  cursor: pointer;
 }
 
 </style>

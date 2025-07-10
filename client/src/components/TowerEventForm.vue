@@ -23,9 +23,10 @@ const typetypes = ['concert', 'convention', 'sport', 'digital']
 async function createNewTowerEventForm(){
     try {
     // logger.log('hehehe', newTowerEventData.value)
-    // const fancySchmancyNewEvent =
-    await towerEventService.createNewTowerEventForm(newTowerEventData.value)
-    
+        // const fancySchmancyNewEvent = 
+        await towerEventService.createNewTowerEventForm(newTowerEventData.value)
+
+
     newTowerEventData.value =({
         name:'',
         type:'',

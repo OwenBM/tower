@@ -10,6 +10,8 @@ export class TowerEventController extends BaseController {
             .get('/:eventId', this.getTowerEventById)
             .use(Auth0Provider.getAuthorizedUserInfo)
             .post('', this.createTowerEvent)
+            .put('/:eventId', this.editTowerEvent)
+            .delete('/:eventId', this.cancelEvent)
     }
 
     /**
@@ -54,6 +56,40 @@ export class TowerEventController extends BaseController {
         try {
             const towerEvents = await towerEventService.getAllTowerEvents()
             response.send(towerEvents)
+        } catch (error) {
+            next(error)
+        }
+    }
+    /**
+* @param {import("express").Request} request
+* @param {import("express").Response} response
+* @param {import("express").NextFunction} next
+*/
+    async editTowerEvent(request, response, next) {
+        try {
+            // console.log('can edit event!!');
+
+            const towerEventId = request.params.eventId
+            const editedData = request.body
+            const userData = request.userInfo
+            const editedTowerEvent = await towerEventService.editTowerEvent(towerEventId, editedData, userData)
+            response.send(editedTowerEvent)
+        } catch (error) {
+            next(error)
+            console.log('cant edit event!!', error)
+        }
+    }
+    /**
+* @param {import("express").Request} request
+* @param {import("express").Response} response
+* @param {import("express").NextFunction} next
+*/
+    async cancelEvent(request, response, next) {
+        try {
+            const towerEventId = request.params.eventId
+            const userData = request.userInfo
+            const canceledEvent = await towerEventService.cancelEvent(towerEventId, userData)
+            response.send(canceledEvent)
         } catch (error) {
             next(error)
         }

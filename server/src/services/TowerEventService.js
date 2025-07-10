@@ -1,4 +1,5 @@
 import { dbContext } from "../db/DbContext.js"
+import { BadRequest, Forbidden } from "../utils/Errors.js"
 
 class TowerEventService {
 
@@ -22,6 +23,34 @@ class TowerEventService {
         await TowerEvent.populate('creator')
         // await TowerEvent.populate('ticketCount')
         return TowerEvent
+    }
+
+    async editTowerEvent(towerEventId, editedData, userData) {
+        const editedTowerEvent = await this.getTowerEventById(towerEventId)
+        // if (editedTowerEvent.isCanceled == true) {
+        if (editedTowerEvent.creatorId.toString() !== userData.id) {
+            throw new Forbidden(`You, ${userData.nickname}, cannot edit anothers persons event!`)
+        } else {
+            editedTowerEvent.name = editedData.name ?? editedTowerEvent.name
+            editedTowerEvent.description = editedData.description ?? editedTowerEvent.description
+            // editedTowerEvent.isCanceled = editedData.isCanceled ?? editedTowerEvent.isCanceled
+            await editedTowerEvent.save()
+            return editedTowerEvent
+        }
+        // } else {
+        // return new BadRequest('You can edit a canceled event!')
+        // }
+    }
+
+    async cancelEvent(towerEventId, userData) {
+        const towerEvent = await this.getTowerEventById(towerEventId)
+        if (towerEvent.creatorId.toString() !== userData.id) {
+            throw new Forbidden(`You cant cancel someone elses event, ${userData.nickname}`)
+        } else {
+            towerEvent.isCanceled = !towerEvent.isCanceled
+            await towerEvent.save()
+            return towerEvent
+        }
     }
 }
 
