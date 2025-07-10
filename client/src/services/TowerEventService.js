@@ -9,7 +9,7 @@ class TowerEventService{
         logger.log('response from delete req', response.data)
         const towerEvent = new TowerEvent(response.data)
         logger.log('towerevent', towerEvent)
-        AppState.TowerEventPage = towerEvent
+        AppState.towerEvent = towerEvent
     }
     async createNewTowerEventForm(towerEventData) {
         const response = await api.post('api/events', towerEventData)
@@ -17,10 +17,10 @@ class TowerEventService{
     }
 
     async getTowerEventbyId(towerEventId) {
-        AppState.TowerEventPage = null
+        AppState.towerEvent = null
         const oldTowerEvent = await api.get(`api/events/${towerEventId}`)
-        AppState.TowerEventPage = oldTowerEvent.data
-        logger.log('appstate of event', AppState.TowerEventPage)
+        AppState.towerEvent = oldTowerEvent.data
+        logger.log('appstate of event', AppState.towerEvent)
     }
 
     async getAllTowerEvents() {

@@ -8,7 +8,7 @@ import { useRoute } from 'vue-router';
 
 
 const route = useRoute()
-const towerEvent = computed(() => AppState.TowerEventPage)
+const towerEvent = computed(() => AppState.towerEvent)
 
 async function getTowerEventById(){
     try {
@@ -40,11 +40,16 @@ onMounted(() => {
 
 
 <template>
-  <section v-if="AppState.TowerEventPage">
+  <section v-if="AppState.towerEvent">
     <div class="container">
       <div class="row justify-content-center">
         <div class="col-10  my-5 ">
-          <img :src="towerEvent.coverImg" :alt="towerEvent.name" class="cover-image rounded">
+          <div :style="{ backgroundImage: `url(${towerEvent.coverImg})` }" class="cover-image rounded">
+            <div v-if="AppState.towerEvent.isCanceled" class="cancel-overlay btn btn-danger">
+              event canceled!
+            </div>
+          </div>
+          <!-- <img :src="towerEvent.coverImg" :alt="towerEvent.name" class="cover-image rounded"> -->
         </div>
       </div>
       <div class="row justify-content-center">
@@ -56,7 +61,6 @@ onMounted(() => {
             </div>
             <div class="">
               <button @click="cancelTowerEvent()" class="btn btn-danger"> CANCEL EVENT </button>
-              <div v-if="AppState.TowerEventPage.isCanceled == true"> event canceled!</div>
             </div>
           </div>
           <div>{{ towerEvent.description }}</div>
@@ -85,7 +89,15 @@ onMounted(() => {
 .cover-image {
   height: 40vh;
   width: 100%;
-  object-fit: cover;
+  background-size: cover;
+  background-position: center;
 }
 
+.cancel-overlay {
+  // margin-top: -4.2rem;
+  cursor: default;
+  // position: absolute;
+  // bottom: 0;
+  // left: 0
+}
 </style>
