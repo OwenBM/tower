@@ -23,7 +23,7 @@ const typetypes = ['concert', 'convention', 'sport', 'digital']
 async function createNewTowerEventForm(){
     try {
     // logger.log('hehehe', newTowerEventData.value)
-        // const fancySchmancyNewEvent = 
+        // const fancySchmancyNewEvent = await towerEventService.createNewTowerEventForm(newTowerEventData.value)
         await towerEventService.createNewTowerEventForm(newTowerEventData.value)
 
 
@@ -39,7 +39,7 @@ async function createNewTowerEventForm(){
 
     
     Modal.getOrCreateInstance('#TowerEventModal').hide()
-    // router.push({name:'EventPage', params:{towerEventId: fancySchmancyNewEvent}})
+        // router.push({name:'EventPage', params:{towerEventId: fancySchmancyNewEvent.id}})
     }catch (error){
       Pop.error(error);
       logger.error('Could not create event', error)
