@@ -20,8 +20,8 @@ watch(theme, () => {
   <nav class="navbar navbar-expand-md bg-codeworks border-bottom border-vue">
     <div class="container gap-2">
       <RouterLink :to="{ name: 'Home' }" class="d-flex align-items-center text-light">
-        <img class="navbar-brand" alt="logo" src="/img/cw-logo.png" height="45" />
-        <b class="fs-5">Vue Starter</b>
+        <img class="navbar-brand picture-circle" alt="logo" src="/img/header-cat.png" height="45" />
+        <b class="fs-5">Tower</b>
       </RouterLink>
       <!-- collapse button -->
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-links"
@@ -31,11 +31,11 @@ watch(theme, () => {
       <!-- collapsing menu -->
       <div class="collapse navbar-collapse " id="navbar-links">
         <ul class="navbar-nav">
-          <li>
+          <!-- <li>
             <RouterLink :to="{ name: 'About' }" class="btn text-green selectable">
               About
             </RouterLink>
-          </li>
+          </li> -->
         </ul>
         <!-- LOGIN COMPONENT HERE -->
         <div class="ms-auto">
@@ -64,5 +64,8 @@ a {
   border-bottom: 2px solid var(--bs-success);
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
+}
+.picture-circle {
+  border-radius: 50%;
 }
 </style>

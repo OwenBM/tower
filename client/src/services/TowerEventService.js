@@ -11,15 +11,23 @@ class TowerEventService{
         logger.log('towerevent', towerEvent)
         AppState.towerEvent = towerEvent
     }
+
     async createNewTowerEventForm(towerEventData) {
         const response = await api.post('api/events', towerEventData)
         logger.log('creating event!', response.data)
+        const newtowerEvent = new TowerEvent(response.data)
+        return newtowerEvent
+
+        // TODO whe need to class the response.data
+        // save it to the appstate
+        // return it
     }
 
     async getTowerEventbyId(towerEventId) {
         AppState.towerEvent = null
         const oldTowerEvent = await api.get(`api/events/${towerEventId}`)
-        AppState.towerEvent = oldTowerEvent.data
+        const newTowerEvent = new TowerEvent(oldTowerEvent.data)
+        AppState.towerEvent = newTowerEvent
         logger.log('appstate of event', AppState.towerEvent)
     }
 

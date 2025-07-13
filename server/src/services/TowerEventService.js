@@ -10,12 +10,8 @@ class TowerEventService {
     }
 
     async getTowerEventById(towerEventId) {
-        try {
             const towerEvent = await dbContext.TowerEvent.findById(towerEventId).populate('creator')
-            return towerEvent
-        } catch (error) {
-            next(error)
-        }
+        return towerEvent
     }
 
     async createTowerEvent(TowerEventData) {

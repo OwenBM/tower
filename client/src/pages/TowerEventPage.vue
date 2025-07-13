@@ -5,37 +5,65 @@ import { logger } from '@/utils/Logger.js';
 import { Pop } from '@/utils/Pop.js';
 import { computed, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
+import { ticketService } from '@/services/TicketService.js'
 
 
 const route = useRoute()
 const towerEvent = computed(() => AppState.towerEvent)
+const ticketProfiles = computed(() => AppState.ticketProfiles)
+const hasTicket = computed(() => {
+  return ticketProfiles.value.some(ticket => ticket.accountId === AppState.account?.id)
+})
 
-async function getTowerEventById(){
-    try {
-      const towerEventId = route.params.towerEventId
-      await towerEventService.getTowerEventbyId(towerEventId)
-    }
-    catch (error){
-      Pop.error(error);
-    }
+async function getTowerEventById() {
+  try {
+    const towerEventId = route.params.towerEventId
+    await towerEventService.getTowerEventbyId(towerEventId)
+  }
+  catch (error) {
+    Pop.error(error);
+  }
+}
+
+async function getTicketsbyEventId() {
+  try {
+    const towerEventId = route.params.towerEventId
+    await ticketService.getTicketsbyEventId(towerEventId)
+
+  }
+  catch (error) {
+    Pop.error(error);
+  }
 }
 
 async function cancelTowerEvent() {
   try {
-    logger.log('button works')
+    // logger.log('button works')
     const towerEventId = route.params.towerEventId
-    logger.log('button still works')
+    // logger.log('button still works')
     await towerEventService.cancelTowerEvent(towerEventId)
   }
   catch (error) {
     Pop.error(error);
   }
-
 }
+
+async function buyTicket() {
+  try {
+    const towerEventId = { eventId: route.params.towerEventId }
+    await ticketService.buyTicket(towerEventId)
+  }
+  catch (error) {
+    Pop.error(error);
+  }
+}
+
 
 onMounted(() => {
   getTowerEventById()
+  getTicketsbyEventId()
 })
+
 </script>
 
 
@@ -45,22 +73,22 @@ onMounted(() => {
       <div class="row justify-content-center">
         <div class="col-10  my-5 ">
           <div :style="{ backgroundImage: `url(${towerEvent.coverImg})` }" class="cover-image rounded">
-            <div v-if="AppState.towerEvent.isCanceled" class="cancel-overlay btn btn-danger">
+            <div v-if="AppState.towerEvent.isCanceled" class="cancel-overlay btn btn-danger ms-2 mt-2">
               event canceled!
+            </div>
+            <div v-if="towerEvent.capacity == ticketProfiles.length">
+              <div class="btn btn-primary text-white ms-2 mt-2">Sold Out!</div>
             </div>
           </div>
           <!-- <img :src="towerEvent.coverImg" :alt="towerEvent.name" class="cover-image rounded"> -->
         </div>
       </div>
       <div class="row justify-content-center">
-        <div class="col-10">
+        <div class="col-md-8">
           <div class="d-flex justify-content-between">
             <div class="d-flex align-items-center">
               <h1>{{ towerEvent.name }}</h1>
               <div class="btn btn-grey text-primary fw-bold ms-3">{{ towerEvent.type }}</div>
-            </div>
-            <div class="">
-              <button @click="cancelTowerEvent()" class="btn btn-danger"> CANCEL EVENT </button>
             </div>
           </div>
           <div>{{ towerEvent.description }}</div>
@@ -74,8 +102,28 @@ onMounted(() => {
             <div>{{ towerEvent.location }}</div>
           </div>
         </div>
-        <!-- </div>
-      <div class="row justify-content-center"> -->
+        <div class="col-md-4">
+          <div v-if="hasTicket">
+            ticket bought!
+          </div>
+          <div v-if="AppState.account">
+            <button @click="buyTicket()" class="btn btn-outline-primary me-3"
+              :disabled="towerEvent.capacity == ticketProfiles.length || AppState.towerEvent.isCanceled">
+              Buy Ticket!
+            </button>
+            <button @click="cancelTowerEvent()" class="btn btn-outline-danger"> Cancel event </button>
+          </div>
+          <br>
+          <div v-if="AppState.ticketProfiles">
+            <h4>Attendees: {{ ticketProfiles.length }}/{{ towerEvent.capacity }}</h4>
+            <div v-for="ticketProfile in ticketProfiles" :key="ticketProfile.id" class="small-card-thing">
+              <div class="d-flex align-items-center p-2 lightest-blue-ever">
+                <img class="attendee-picture" :src="ticketProfile.profile.picture" :alt="ticketProfile.profile.name">
+                <div class="ms-3">{{ ticketProfile.profile.name }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -99,5 +147,15 @@ onMounted(() => {
   // position: absolute;
   // bottom: 0;
   // left: 0
+}
+
+.attendee-picture {
+  height: 45px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+}
+
+.small-card-thing {
+  width: 30vw;
 }
 </style>

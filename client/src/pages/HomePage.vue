@@ -108,10 +108,9 @@ onMounted(()=> {
           <h3 class="fw-bold">Explore top categories</h3>
         </div>
         <div class="row justify-content-center mt-4">
-          <div v-for="filterType in filterTypes" :key="filterType.type" class="col-md-2">
+          <div v-for="filterType in filterTypes" :key="filterType.type" class="col-lg-2 col-8 mb-lg-0 mb-2">
             <div @click="selectedType = filterType.type" class="text-center lightest-blue-ever rounded p-2">
               <h3 :class="filterType.symbolClassing"></h3>
-
               <div>{{ filterType.type.toLocaleUpperCase() }}</div>
             </div>
           </div>
@@ -128,7 +127,7 @@ onMounted(()=> {
         <h3 class="fw-bold">Upcoming Events</h3>
       </div>
       <div class="row my-3">
-        <div class="col-md-3 mb-2" v-for="towerEvent in towerEvents" :key="towerEvent.id">
+        <div class="col-lg-3 col-md-6 col-12 mb-2" v-for="towerEvent in towerEvents" :key="towerEvent.id">
           <div class="d-flex justify-content-around">
             <TowerEventCard :towerEvent="towerEvent" />
           </div>
@@ -144,9 +143,6 @@ onMounted(()=> {
   font-size: small;
 }
 
-.lightest-blue-ever {
-  background-color: #f8f6ff;
-  cursor: pointer;
-}
+
 
 </style>

@@ -1,7 +1,10 @@
 <script setup>
+import { AppState } from '@/AppState.js';
+import { computed } from 'vue';
 
 
 
+const ticketProfiles = computed(() => AppState.ticketProfiles)
 defineProps ({towerEvent: Object})
 </script>
 
@@ -9,7 +12,7 @@ defineProps ({towerEvent: Object})
 <template>
     <div class="card card-width mx-1">
         <RouterLink :to="{ name: 'EventPage', params: { towerEventId: towerEvent.id } }">
-            <!-- got a git too creative -->
+            <!-- got a bit too creative -->
             <!-- <div :style="{ backgroundImage: `url(${towerEvent.coverImg})` }" class="card-img-top other-event-img">
                 test
             </div> -->
@@ -18,9 +21,12 @@ defineProps ({towerEvent: Object})
                 <div v-if="towerEvent.isCanceled" class="cancel-overlay btn btn-danger mb-2">
                     event canceled!
                 </div>
+                <div v-if="towerEvent.capacity == ticketProfiles.length" class="btn btn-primary text-white">
+                    sold out
+                </div>
                 <h5 class="card-title">{{ towerEvent.name }}</h5>
                 <div class="card-text">
-                    <div>Event by: {{ towerEvent.creator.name }} </div>
+                    <div v-if="towerEvent.creator">Event by: {{ towerEvent.creator.name }} </div>
                     <div>{{ towerEvent.startDate }}</div>
                     <div>{{ towerEvent.location }}</div>
                     <div>{{ towerEvent.capacity }} attending</div>
