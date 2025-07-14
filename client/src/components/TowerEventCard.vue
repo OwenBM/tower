@@ -29,7 +29,7 @@ defineProps ({towerEvent: Object})
                     <div v-if="towerEvent.creator">Event by: {{ towerEvent.creator.name }} </div>
                     <div>{{ towerEvent.startDate }}</div>
                     <div>{{ towerEvent.location }}</div>
-                    <div>{{ towerEvent.capacity }} attending</div>
+                    <div>Capacity of: {{ towerEvent.capacity }}</div>
                 </div>
             </div>
         </RouterLink>

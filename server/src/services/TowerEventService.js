@@ -3,6 +3,8 @@ import { BadRequest, Forbidden } from "../utils/Errors.js"
 
 class TowerEventService {
 
+
+
     async getAllTowerEvents() {
         const towerEvent = await dbContext.TowerEvent.find().populate('creator')
         // console.log('tower event', towerEvent.creator);
@@ -23,7 +25,9 @@ class TowerEventService {
 
     async editTowerEvent(towerEventId, editedData, userData) {
         const editedTowerEvent = await this.getTowerEventById(towerEventId)
-        // if (editedTowerEvent.isCanceled == true) {
+        if (editedTowerEvent.isCanceled == true) {
+            throw new BadRequest('You can edit a canceled event!')
+        }
         if (editedTowerEvent.creatorId.toString() !== userData.id) {
             throw new Forbidden(`You, ${userData.nickname}, cannot edit anothers persons event!`)
         } else {
@@ -34,7 +38,6 @@ class TowerEventService {
             return editedTowerEvent
         }
         // } else {
-        // return new BadRequest('You can edit a canceled event!')
         // }
     }
 

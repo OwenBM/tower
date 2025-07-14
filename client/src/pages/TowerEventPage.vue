@@ -108,7 +108,7 @@ onMounted(() => {
           </div>
           <div v-if="AppState.account">
             <button @click="buyTicket()" class="btn btn-outline-primary me-3"
-              :disabled="towerEvent.capacity == ticketProfiles.length || AppState.towerEvent.isCanceled">
+              :disabled="towerEvent.capacity <= ticketProfiles.length || AppState.towerEvent.isCanceled">
               Buy Ticket!
             </button>
             <button @click="cancelTowerEvent()" class="btn btn-outline-danger"> Cancel event </button>

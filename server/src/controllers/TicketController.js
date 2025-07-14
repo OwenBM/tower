@@ -15,11 +15,7 @@ export class TicketController extends BaseController{
         
     }
 
-    /**
-* @param {import("express").Request} request
-* @param {import("express").Response} response
-* @param {import("express").NextFunction} next
-*/
+
     async deleteTicket(request, response, next) {
         try {
             const ticketId = request.params.ticketId
@@ -31,11 +27,7 @@ export class TicketController extends BaseController{
         }
     }
 
-    /**
-* @param {import("express").Request} request
-* @param {import("express").Response} response
-* @param {import("express").NextFunction} next
-*/
+
     async createTicket(request, response, next){
         try {
             const bigHunkofData = request.body

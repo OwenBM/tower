@@ -1,6 +1,7 @@
 import auth0provider, { Auth0Provider } from "@bcwdev/auth0provider";
 import BaseController from "../utils/BaseController.js";
 import { towerEventService } from "../services/TowerEventService.js";
+import { towerCommentService } from "../services/TowerCommentService.js"
 import { ticketService } from "../services/TicketService.js";
 
 export class TowerEventController extends BaseController {
@@ -10,10 +11,26 @@ export class TowerEventController extends BaseController {
             .get('', this.getAllTowerEvents)
             .get('/:eventId', this.getTowerEventById)
             .get('/:eventId/tickets', this.getTicketHaversForEvent)
+            .get('/:eventId/comments', this.getCommentsByEventId)
             .use(Auth0Provider.getAuthorizedUserInfo)
             .post('', this.createTowerEvent)
             .put('/:eventId', this.editTowerEvent)
             .delete('/:eventId', this.cancelEvent)
+    }
+
+    /**
+* @param {import("express").Request} request
+* @param {import("express").Response} response
+* @param {import("express").NextFunction} next
+*/
+    async getCommentsByEventId(request, response, next) {
+        try {
+            const eventId = request.params.eventId
+            const comments = await towerCommentService.getCommentsByEventId(eventId)
+            response.send(comments)
+        } catch (error) {
+            next(error)
+        }
     }
 
     /**
@@ -31,11 +48,7 @@ export class TowerEventController extends BaseController {
         }
     }
 
-    /**
-* @param {import("express").Request} request
-* @param {import("express").Response} response
-* @param {import("express").NextFunction} next
-*/
+
     async createTowerEvent(request, response, next) {
         try {
             const TowerEventData = request.body
@@ -48,11 +61,7 @@ export class TowerEventController extends BaseController {
         }
     }
 
-    /**
-* @param {import("express").Request} request
-* @param {import("express").Response} response
-* @param {import("express").NextFunction} next
-*/
+
     async getTowerEventById(request, response, next) {
         try {
             const towerEventId = request.params.eventId
@@ -77,11 +86,7 @@ export class TowerEventController extends BaseController {
             next(error)
         }
     }
-    /**
-* @param {import("express").Request} request
-* @param {import("express").Response} response
-* @param {import("express").NextFunction} next
-*/
+
     async editTowerEvent(request, response, next) {
         try {
             // console.log('can edit event!!');
@@ -96,11 +101,7 @@ export class TowerEventController extends BaseController {
             console.log('cant edit event!!', error)
         }
     }
-    /**
-* @param {import("express").Request} request
-* @param {import("express").Response} response
-* @param {import("express").NextFunction} next
-*/
+
     async cancelEvent(request, response, next) {
         try {
             const towerEventId = request.params.eventId
