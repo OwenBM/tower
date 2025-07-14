@@ -3,16 +3,23 @@ import { AppState } from '@/AppState.js';
 import { towerEventService } from '@/services/TowerEventService.js';
 import { logger } from '@/utils/Logger.js';
 import { Pop } from '@/utils/Pop.js';
-import { computed, onMounted } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { ticketService } from '@/services/TicketService.js'
+import { towerCommentService } from '@/services/TowerCommentService.js';
 
 
 const route = useRoute()
 const towerEvent = computed(() => AppState.towerEvent)
 const ticketProfiles = computed(() => AppState.ticketProfiles)
+const towerComments = computed(() => AppState.towerComments)
 const hasTicket = computed(() => {
   return ticketProfiles.value.some(ticket => ticket.accountId === AppState.account?.id)
+})
+
+const editableCommentData = ref({
+  body: '',
+  eventId: route.params.towerEventId
 })
 
 async function getTowerEventById() {
@@ -29,7 +36,16 @@ async function getTicketsbyEventId() {
   try {
     const towerEventId = route.params.towerEventId
     await ticketService.getTicketsbyEventId(towerEventId)
+  }
+  catch (error) {
+    Pop.error(error);
+  }
+}
 
+async function getCommentsByEventId() {
+  try {
+    const towerEventId = route.params.towerEventId
+    await towerCommentService.getCommentsByEventId(towerEventId)
   }
   catch (error) {
     Pop.error(error);
@@ -58,10 +74,21 @@ async function buyTicket() {
   }
 }
 
+async function createTowerComment() {
+  try {
+    await towerCommentService.createTowerComment(editableCommentData.value)
+    editableCommentData.value.body = ''
+  }
+  catch (error) {
+    Pop.error(error);
+  }
+}
+
 
 onMounted(() => {
   getTowerEventById()
   getTicketsbyEventId()
+  getCommentsByEventId()
 })
 
 </script>
@@ -69,7 +96,7 @@ onMounted(() => {
 
 <template>
   <section v-if="AppState.towerEvent">
-    <div class="container">
+    <div class="container mb-5">
       <div class="row justify-content-center">
         <div class="col-10  my-5 ">
           <div :style="{ backgroundImage: `url(${towerEvent.coverImg})` }" class="cover-image rounded">
@@ -125,6 +152,29 @@ onMounted(() => {
           </div>
         </div>
       </div>
+      <h4 class="mt-5 mb-3">See what folks are saying...</h4>
+      <div class="row">
+
+        <form @submit.prevent="createTowerComment()">
+          <div>
+            <input type="text" width="48" height="48" class="me-2" v-model="editableCommentData.body"
+              placeholder="Your comment...">
+            <button type="submit" class="btn btn-success">Submit</button>
+          </div>
+        </form>
+
+        <div v-for="towerComment in towerComments" :key="towerComment.id" class="col-8">
+          <div class="row pt-2 shadow-bottom">
+            <div class="d-flex">
+              <img :src="towerComment.creator.picture" class="attendee-picture">
+              <div>
+                <div class="fw-bold mb-1">{{ towerComment.creator.name }}</div>
+                <div>{{ towerComment.body }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
   <section v-else>
@@ -158,4 +208,9 @@ onMounted(() => {
 .small-card-thing {
   width: 30vw;
 }
+
+// .comment-size {
+//   height: 20vh;
+//   width: 40vw
+// }
 </style>

@@ -1,4 +1,5 @@
 <script setup>
+import { AppState } from '@/AppState.js';
 import { towerEventService } from '@/services/TowerEventService.js';
 import { logger } from '@/utils/Logger.js';
 import { Pop } from '@/utils/Pop.js';
@@ -22,7 +23,7 @@ const typetypes = ['concert', 'convention', 'sport', 'digital']
 
 async function createNewTowerEventForm(){
     try {
-    // logger.log('hehehe', newTowerEventData.value)
+        // logger.log('hehehe', newTowerEventData.value)
         const fancySchmancyNewEvent = await towerEventService.createNewTowerEventForm(newTowerEventData.value)
         // await towerEventService.createNewTowerEventForm(newTowerEventData.value)
 
@@ -56,7 +57,8 @@ async function createNewTowerEventForm(){
         </div>
         <div class="mb-3">
             <label for="towerEvent-type" class="form-label">Type of Event</label>
-            <select v-model="newTowerEventData.type" type="select" class="form-select" placeholder="Select a type!" id="towerEvent-type">
+            <select v-model="newTowerEventData.type" type="select" class="form-select" placeholder="Select a type!"
+                id="towerEvent-type">
                 <option v-for="type in typetypes" :key="`TowerEvent-form-${type}`">
                     {{ type }}
                 </option>

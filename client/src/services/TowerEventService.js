@@ -13,6 +13,7 @@ class TowerEventService{
     }
 
     async createNewTowerEventForm(towerEventData) {
+        logger.log('pre-event data', towerEventData)
         const response = await api.post('api/events', towerEventData)
         logger.log('creating event!', response.data)
         const newtowerEvent = new TowerEvent(response.data)
