@@ -5,6 +5,14 @@ import { towerComment } from "@/models/TowerComments.js"
 
 class TowerCommentService{
 
+  async deleteTowerComment(towerCommentId) {
+    const response = await api.delete(`api/comments/${towerCommentId}`)
+    logger.log('deleted comment!', response.data)
+    const towerComments = AppState.towerComments
+    const index = towerComments.findIndex(comment => comment.id == towerCommentId)
+    towerComments.splice(index, 1)
+  }
+
   async createTowerComment(towerCommentData) {
     logger.log('pre-create comment', towerCommentData)
     const response = await api.post('api/comments', towerCommentData)

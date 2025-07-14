@@ -84,6 +84,18 @@ async function createTowerComment() {
   }
 }
 
+async function deleteTowerComment(towerCommentId) {
+  const confirmed = await Pop.confirm('Are you sure you want to delete this comment?')
+  if (!confirmed) return
+  try {
+    // logger.log('deleting comment!', towerCommentId)
+    await towerCommentService.deleteTowerComment(towerCommentId)
+  }
+  catch (error) {
+    Pop.error(error);
+  }
+}
+
 
 onMounted(() => {
   getTowerEventById()
@@ -167,10 +179,13 @@ onMounted(() => {
           <div class="row pt-2 shadow-bottom">
             <div class="d-flex">
               <img :src="towerComment.creator.picture" class="attendee-picture">
-              <div>
+              <div class="ms-2 me-5">
                 <div class="fw-bold mb-1">{{ towerComment.creator.name }}</div>
                 <div>{{ towerComment.body }}</div>
               </div>
+              <!-- <div v-if="towerComment.accountId == AppState.account?.id"> -->
+              <button @click="deleteTowerComment(towerComment.id)" class="btn btn-danger"> Delete</button>
+              <!-- </div> -->
             </div>
           </div>
         </div>
